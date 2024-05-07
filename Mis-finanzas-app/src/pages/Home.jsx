@@ -34,6 +34,18 @@ const Home = () => {
     fetchExchangeRates();
   }, []);
 
+  // Calcular la media móvil de 7 días (puedes ajustar el período según tus necesidades)
+  const movingAveragePeriod = 7;
+  const movingAverages = averageExchangeRates.map((rate, index) => {
+    if (index < movingAveragePeriod - 1) {
+      return null; // No hay suficientes datos para calcular la media móvil al principio
+    }
+    const sum = averageExchangeRates
+      .slice(index - movingAveragePeriod + 1, index + 1)
+      .reduce((acc, curr) => acc + curr.average, 0);
+    return sum / movingAveragePeriod;
+  });
+
   const data = {
     labels: averageExchangeRates.map(rate => rate.date),
     datasets: [
@@ -42,6 +54,13 @@ const Home = () => {
         data: averageExchangeRates.map(rate => rate.average),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+      {
+        label: `Media Móvil (${movingAveragePeriod} días)`,
+        data: movingAverages,
+        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
         fill: true,
       },
     ],
