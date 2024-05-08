@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
@@ -11,7 +12,7 @@ const Home = () => {
     // Obtener el tipo de cambio actual
     const fetchCurrentExchangeRate = async () => {
       try {
-        const response = await axios.get('https://api.banxico.org/v1/SIEAPIRest/service.svc/V2/PWS073/getData/SF43718/d30332/d30245/2022-05-01/2022-05-01');
+        const response = await axios.get('https://api.banxico.org/v1/SIEAPIRest/service.svc/V2/PWS073/getData/SF43718/d30332/d30245/2024-05-01/2024-05-07');
         setCurrentExchangeRate(response.data.bmx.series[0].datos[0].dato);
       } catch (error) {
         console.error('Error fetching current exchange rate:', error);
@@ -21,7 +22,7 @@ const Home = () => {
     // Obtener los tipos de cambio del mes
     const fetchExchangeRates = async () => {
       try {
-        const response = await axios.get('https://api.banxico.org/v1/SIEAPIRest/service.svc/V2/PWS073/getData/SF43718/d30332/d30245/2022-05-01/2022-05-31');
+        const response = await axios.get('https://api.banxico.org/v1/SIEAPIRest/service.svc/V2/PWS073/getData/SF43718/d30332/d30245/2024-05-01/2024-05-07');
         const exchangeRates = response.data.bmx.series[0].datos;
         const averages = calculateAverageExchangeRate(exchangeRates);
         setAverageExchangeRates(averages);
