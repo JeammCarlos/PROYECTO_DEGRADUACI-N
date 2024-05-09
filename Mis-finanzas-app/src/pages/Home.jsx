@@ -1,9 +1,11 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns'; // Importar el adaptador
+import { Chart, registerables } from 'chart.js'; 
 import calculateAverageExchangeRate from '../utils/calculateAverageExchangeRate';
 
+Chart.register(...registerables); // Registrar la escala de tiempo
 const Home = () => {
   const [currentExchangeRate, setCurrentExchangeRate] = useState(null);
   const [averageExchangeRates, setAverageExchangeRates] = useState([]);
@@ -19,10 +21,8 @@ const Home = () => {
         const response = await axios.get(
           `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/${startDate}/${endDate}?token=c59249170c61b227b21972054e8e164cccbfc498be704476f1bf3783a7cb5479`
         );
-
         const exchangeRates = response.data.bmx.series[0].datos;
         const averages = calculateAverageExchangeRate(exchangeRates);
-
         setCurrentExchangeRate(exchangeRates[exchangeRates.length - 1].dato);
         setAverageExchangeRates(averages);
       } catch (error) {
@@ -33,17 +33,17 @@ const Home = () => {
     fetchData();
   }, [startDate, endDate]);
   
-  // Calcular la media móvil de 7 días (puedes ajustar el período según tus necesidades)
-  const movingAveragePeriod = 7;
-  const movingAverages = averageExchangeRates.map((rate, index) => {
-    if (index < movingAveragePeriod - 1) {
-      return null; // No hay suficientes datos para calcular la media móvil al principio
-    }
-    const sum = averageExchangeRates
-      .slice(index - movingAveragePeriod + 1, index + 1)
-      .reduce((acc, curr) => acc + curr.average, 0);
-    return sum / movingAveragePeriod;
-  });
+// Calcular la media móvil de 7 días
+const movingAveragePeriod = 7;
+const movingAverages = averageExchangeRates.map((rate, index) => {
+  if (index < movingAveragePeriod - 1) {
+    return null;
+  }
+  const sum = averageExchangeRates
+    .slice(index - movingAveragePeriod + 1, index + 1)
+    .reduce((acc, curr) => acc + curr.average, 0);
+  return sum / movingAveragePeriod;
+});
 
   const data = {
     labels: averageExchangeRates.map(rate => rate.date),
@@ -92,7 +92,7 @@ const Home = () => {
   const options = {
     scales: {
       x: {
-        type: 'time',
+        type: 'time', // Escala de tiempo ahora registrada
         time: {
           unit: 'day',
         },
@@ -123,11 +123,8 @@ const Home = () => {
       <h2>Tipo de Cambio Actual</h2>
       {currentExchangeRate && <p>1 USD = {currentExchangeRate} MXN</p>}
 
-      <h2>Tipos de Cambio del Mes</h2>
-      <Line data={data} options={options} />
-
  {/* Entrada para las fechas */}
-      <div>
+ <div>
         <label htmlFor="startDate">Fecha de inicio:</label>
         <input
           type="date"
@@ -145,6 +142,10 @@ const Home = () => {
           onChange={handleDateChange}
         />
       </div> 
+      
+      <h2>Tipos de Cambio del Mes</h2>
+      <Line data={data} options={options} />
+
       {showError && <p style={{ color: 'red' }}>Error: La fecha de inicio debe ser menor o igual a la fecha de fin.</p>}
     </div>
   );

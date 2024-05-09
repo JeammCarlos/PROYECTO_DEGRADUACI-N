@@ -2,11 +2,18 @@ import { format, parseISO } from 'date-fns';
 
 const calculateAverageExchangeRate = (exchangeRates) => {
   const groupedByDay = exchangeRates.reduce((acc, rate) => {
-    const date = format(parseISO(rate.date), 'yyyy-MM-dd');
+    // Verificar si rate.date existe antes de aplicar parseISO
+    const date = rate.date ? format(parseISO(rate.date), 'yyyy-MM-dd') : null;
+
     if (!acc[date]) {
       acc[date] = [];
     }
-    acc[date].push(rate.value);
+
+    // Verificar si rate.value existe antes de agregarlo al arreglo
+    if (rate.value) {
+      acc[date].push(rate.value);
+    }
+
     return acc;
   }, {});
 

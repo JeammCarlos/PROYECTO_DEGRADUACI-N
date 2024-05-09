@@ -1,0 +1,13 @@
+canvas {
+    margin: 1540px 480px;
+    padding: 1540px 480px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+
+}
+canvas:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+    width: 100%;
+}
