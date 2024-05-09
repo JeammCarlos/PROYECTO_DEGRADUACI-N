@@ -19,7 +19,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/${startDate}/${endDate}?token=c59249170c61b227b21972054e8e164cccbfc498be704476f1bf3783a7cb5479`
+          `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${startDate}/${endDate}?token=c59249170c61b227b21972054e8e164cccbfc498be704476f1bf3783a7cb5479`
         );
         const exchangeRates = response.data.bmx.series[0].datos;
         const averages = calculateAverageExchangeRate(exchangeRates);
@@ -141,12 +141,12 @@ const movingAverages = averageExchangeRates.map((rate, index) => {
           value={endDate}
           onChange={handleDateChange}
         />
+        {showError && <p style={{ color: 'red' }}>Error: La fecha de inicio debe ser menor o igual a la fecha de fin.</p>}
       </div> 
       
       <h2>Tipos de Cambio del Mes</h2>
       <Line data={data} options={options} />
 
-      {showError && <p style={{ color: 'red' }}>Error: La fecha de inicio debe ser menor o igual a la fecha de fin.</p>}
     </div>
   );
 };

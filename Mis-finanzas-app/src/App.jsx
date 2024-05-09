@@ -8,7 +8,7 @@ const App = () => {
 
     <>
      <BrowserRouter>
-       <RoutesIndex /> {/* Utiliza el componente RoutesIndex */}
+       <RoutesIndex />
      </BrowserRouter>
     </>
     
