@@ -1,13 +1,5 @@
-canvas {
-    margin: 1540px 480px;
-    padding: 1540px 480px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+.contenedor-grafico {
+    width: 50%;  // Ajusta el ancho
+    height: 200px; // Ajusta la altura
 
-}
-canvas:after {
-    content: "";
-    display: block;
-    padding-bottom: 100%;
-    width: 100%;
 }

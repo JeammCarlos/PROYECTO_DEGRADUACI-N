@@ -145,7 +145,9 @@ const movingAverages = averageExchangeRates.map((rate, index) => {
       </div> 
       
       <h2>Tipos de Cambio del Mes</h2>
-      <Line data={data} options={options} />
+      <div className="contenedor-grafico">
+        <Line data={data} options={options} />
+      </div>
 
     </div>
   );
